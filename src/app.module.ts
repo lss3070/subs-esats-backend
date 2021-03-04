@@ -29,8 +29,8 @@ import { Restaurant } from './restaurants/entitities/restaurant.entity';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
-      logging: true,
-      entities: [Restaurant],
+      logging: process.env.NODE_ENV !== 'prod', //DB에서 돌아가는 로그 체크
+      entities: [Restaurant], //DB설정 DB는 Restaurant
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
