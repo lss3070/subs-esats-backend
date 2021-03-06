@@ -26,8 +26,14 @@ export class RestaurantResolver {
 
   @Mutation((returns) => Boolean)
   async updateRestaurant(
-    @Args('input') UpdateRestaurantDto: UpdateRestaurantDto, //ArgsType을 쓴다면 @Args의 값은 비워둬야된다
-  ) {
-    return true;
+    @Args('input') updateRestaurantDto: UpdateRestaurantDto, //ArgsType을 쓴다면 @Args의 값은 비워둬야된다
+  ): Promise<boolean> {
+    try {
+      await this.restaurantService.updateRestaurant(updateRestaurantDto);
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
   }
 }

@@ -5,6 +5,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { Restaurant } from './restaurants/entitities/restaurant.entity';
+import { UsersModule } from './users/users.module';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
@@ -30,12 +32,13 @@ import { Restaurant } from './restaurants/entitities/restaurant.entity';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod', //DB에서 돌아가는 로그 체크
-      entities: [Restaurant], //DB설정 DB는 Restaurant
+      entities: [User], //DB설정 DB는 Restaurant
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
     }),
-    RestaurantsModule,
+    // RestaurantsModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],

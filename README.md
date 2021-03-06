@@ -1,6 +1,7 @@
 ###sub-eats-backend
 
 3.4 간단정리
+이해안될땐 3.3ㄱRecap 다시 보자
 
 전체 흐름: AppModule - TypeOrmModule - RestaurantsModule - RestaurantResolver - RestaurantService
 
@@ -16,3 +17,22 @@
 
 4) RestaurantResolver
 : GraphQL Query/Mutation으로 DB에 접근하는 RestaurantService의 메서드들 활용.
+
+
+## User Entity:
+
+- id
+- createdAt
+- updatedAt
+
+- email
+- password
+- role(client|owner|delivery)
+
+## User CRUD:
+
+- Create Account
+- Log In
+- See Profile
+- Edit Profile
+- Verify Email
