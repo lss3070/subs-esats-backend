@@ -7,6 +7,8 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
 import { Restaurant } from './restaurants/entitities/restaurant.entity';
 import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
+import { JwtModule } from './jwt/jwt.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { User } from './users/entities/user.entity';
         DB_USERNAME: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
+        SECRET_KEY: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -35,10 +38,12 @@ import { User } from './users/entities/user.entity';
       entities: [User], //DB설정 DB는 Restaurant
     }),
     GraphQLModule.forRoot({
-      autoSchemaFile: true,
+      autoSchemaFile: true, //설정값이 정해져있으면 dynamic module
     }),
     // RestaurantsModule,
-    UsersModule,
+    UsersModule, //아무것도 정의되지 않은 얘들은 static module
+    CommonModule,
+    JwtModule.forRoot(),
   ],
   controllers: [],
   providers: [],
