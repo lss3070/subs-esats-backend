@@ -19,6 +19,16 @@
 : GraphQL Query/Mutation으로 DB에 접근하는 RestaurantService의 메서드들 활용.
 
 
+
+5.11 recap
+header에 X-JWT란 토큰을 보냄
+그것을 사용하기 위해 middleware에서 jwtService.veriry()를 이용해서 id를 찾음
+그럼 userservice를 사용해서 해당 id를 가진 user를 찾음
+그러고 db에서 user를 찾게되면 reuquest반환함
+
+app module에서 context는 아폴로에서나 모든 resolver에서 데이터를 보낼수 있는 프로퍼티이다.
+
+
 ## User Entity:
 
 - id

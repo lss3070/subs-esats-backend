@@ -9,16 +9,14 @@ import { LoginInput } from './dtos/login.dto';
 import { JsonWebTokenError } from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '../jwt/jwt.service';
+import { EditProfileInput } from './dtos/edit-profile.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly users: Repository<User>,
-    private readonly config: ConfigService,
     private readonly jwtService: JwtService,
-  ) {
-    this.jwtService.hello();
-  }
+  ) {}
 
   async createAccount({
     email,
@@ -65,10 +63,7 @@ export class UsersService {
           error: 'Wrong password',
         };
       }
-      const token = jwt.sign(
-        { id: user.id, password: '12345' },
-        this.config.get('SECRET_KEY'),
-      );
+      const token = this.jwtService.sign(user.id);
       return {
         ok: true,
         token,
@@ -79,5 +74,13 @@ export class UsersService {
         error,
       };
     }
+  }
+
+  async findById(id: number): Promise<User> {
+    return this.users.findOne(id);
+  }
+
+  async editProfile(userId: number, editProfileInput: EditProfileInput) {
+    return this.users.update(userId, { ...editProfileInput });
   }
 }
