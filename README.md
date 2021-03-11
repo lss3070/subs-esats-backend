@@ -29,6 +29,9 @@ header에 X-JWT란 토큰을 보냄
 app module에서 context는 아폴로에서나 모든 resolver에서 데이터를 보낼수 있는 프로퍼티이다.
 
 
+5.16 recap
+
+
 ## User Entity:
 
 - id

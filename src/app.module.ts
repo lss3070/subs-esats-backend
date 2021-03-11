@@ -13,6 +13,8 @@ import { User } from './users/entities/user.entity';
 import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { AuthorizationModule } from './auth/auth.module';
+import { Verifiation } from './users/entities/verification.entity';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -28,6 +30,9 @@ import { AuthorizationModule } from './auth/auth.module';
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
         PRIVATE_KEY: Joi.string().required(),
+        MAILGUN_API_KEY: Joi.string().required(),
+        MAILGUN_DOMAIN_NAME: Joi.string().required(),
+        MAILGUN_FROM_EMAIL: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -39,7 +44,7 @@ import { AuthorizationModule } from './auth/auth.module';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod', //DB에서 돌아가는 로그 체크
-      entities: [User], //DB설정 DB는 Restaurant
+      entities: [User, Verifiation], //DB설정 DB는 Restaurant
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true, //설정값이 정해져있으면 dynamic module
@@ -50,8 +55,9 @@ import { AuthorizationModule } from './auth/auth.module';
       privateKey: process.env.PRIVATE_KEY,
     }),
     UsersModule, //아무것도 정의되지 않은 얘들은 static module
-    // CommonModule, 
+    // CommonModule,
     AuthorizationModule,
+    MailModule,
   ],
   controllers: [],
   providers: [],
