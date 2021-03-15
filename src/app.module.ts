@@ -13,7 +13,7 @@ import { User } from './users/entities/user.entity';
 import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { AuthorizationModule } from './auth/auth.module';
-import { Verifiation } from './users/entities/verification.entity';
+import { Verification } from './users/entities/verification.entity';
 import { MailModule } from './mail/mail.module';
 
 @Module({
@@ -44,7 +44,7 @@ import { MailModule } from './mail/mail.module';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod', //DB에서 돌아가는 로그 체크
-      entities: [User, Verifiation], //DB설정 DB는 Restaurant
+      entities: [User, Verification], //DB설정 DB는 Restaurant
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true, //설정값이 정해져있으면 dynamic module
@@ -57,7 +57,11 @@ import { MailModule } from './mail/mail.module';
     UsersModule, //아무것도 정의되지 않은 얘들은 static module
     // CommonModule,
     AuthorizationModule,
-    MailModule,
+    MailModule.forRoot({
+      apiKey: process.env.MAILGUN_API_KEY,
+      domain: process.env.MAILGUN_DOMAIN_NAME,
+      fromEmail: process.env.MAILGUN_FROM_EMAIL,
+    }),
   ],
   controllers: [],
   providers: [],
