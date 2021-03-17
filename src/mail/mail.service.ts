@@ -34,8 +34,6 @@ export class MailService {
           body: form,
         },
       );
-      console.log('!!');
-      console.log(response.body);
     } catch (e) {
       console.log(e);
     }

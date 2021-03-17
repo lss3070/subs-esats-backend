@@ -49,3 +49,6 @@ app module에서 context는 아폴로에서나 모든 resolver에서 데이터�
 - See Profile
 - Edit Profile
 - Verify Email
+
+## Unit test
+- 7.4,8,9.2ing...

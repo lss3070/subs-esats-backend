@@ -1,30 +1,41 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { IsBoolean, IsOptional, IsString, Length } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { IsString, Length } from 'class-validator';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { CoreEntity } from '../../common/entities/core.entity';
+import { Category } from './category.entity';
+import { User } from '../../users/entities/user.entity';
 
 //entity 파일은 db틀이라고 생각하면 될듯 여기서 DB의 모델을 생성하고 자동으로 graphql에 스키마 작성
-@InputType({ isAbstract: true })
+@InputType('RestaurantInputType', { isAbstract: true })
 @ObjectType()
 @Entity() //decorator
-export class Restaurant {
-  @PrimaryGeneratedColumn()
-  @Field((type) => Number)
-  id: number;
-
+export class Restaurant extends CoreEntity {
   @Field((type) => String)
   @Column()
   @IsString()
   @Length(5)
   name: string;
 
-  @Field((type) => Boolean, { nullable: true })
-  @Column({ default: true })
-  @IsBoolean()
-  @IsOptional() //IsOptional해당 필드를 보내거나 보내지 않을수 있다는것 뜻함
-  isVegan?: boolean;
-
-  @Field((type) => String, { defaultValue: 'eeeeeee' })
-  @IsString()
+  @Field((type) => String)
   @Column()
+  @IsString()
+  coverImg: string;
+
+  @Field((type) => String, { defaultValue: '강남' })
+  @Column()
+  @IsString()
   address: string;
+
+  @Field((type) => Category, { nullable: true })
+  @ManyToOne((type) => Category, (category) => category.restaurants, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  category: Category;
+
+  @Field((type) => User)
+  @ManyToOne((type) => User, (user) => user.restaurants, {
+    onDelete: 'CASCADE',
+  })
+  owner: User;
 }

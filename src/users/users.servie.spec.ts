@@ -57,7 +57,7 @@ describe('UserService', () => {
     usersRepository = modules.get(getRepositoryToken(User));
   });
 
-  it('be definded', () => {
+  it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
@@ -79,6 +79,7 @@ describe('UserService', () => {
       });
     });
   });
+
   it.todo('login');
   it.todo('findById');
   it.todo('editProfile');

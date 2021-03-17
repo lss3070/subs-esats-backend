@@ -48,7 +48,7 @@ export class UserService {
       return { ok: true, error: null };
     } catch (e) {
       //make error
-      return { ok: false, error: "Couldn't create account" };
+      return { ok: false, error: "There is a user with that email already" };
     }
     //check new user
     // create user & hash the password
@@ -110,7 +110,6 @@ export class UserService {
     { email, password }: EditProfileInput,
   ): Promise<EditProfileOutput> {
     try {
-      console.log('!!');
       const user = await this.users.findOne(userId);
       if (email) {
         user.email = email;

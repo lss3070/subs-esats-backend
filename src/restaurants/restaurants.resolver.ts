@@ -1,39 +1,28 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Restaurant } from './entitities/restaurant.entity';
-import { CreateRestaurantDto } from './dto/create-restaurant.dto';
+import {
+  CreateRestaurantInput,
+  CreateRestaurantOutput,
+} from './dto/create-restaurant.dto';
+import { User, UserRole } from '../users/entities/user.entity';
+import { AuthUser } from 'src/auth/auth-user.decorator';
 import { RestaurantService } from './restaurant.service';
-import { number } from 'joi';
-import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
+import { SetMetadata } from '@nestjs/common';
+import { Role } from 'src/auth/role.decorator';
 
-@Resolver((of) => Restaurant) //DB로 접근하는 RestaurantService메서드 활용..
+@Resolver((of) => Restaurant)
 export class RestaurantResolver {
   constructor(private readonly restaurantService: RestaurantService) {}
-  @Query((returns) => [Restaurant]) //for grapql
-  restaurants(): Promise<Restaurant[]> {
-    return this.restaurantService.getAll();
-  }
-  @Mutation((returns) => Boolean)
-  async createRestaurant(
-    @Args('input') CreateRestaurantDto: CreateRestaurantDto,
-  ): Promise<boolean> {
-    try {
-      await this.restaurantService.creatReesaurant(CreateRestaurantDto);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
 
-  @Mutation((returns) => Boolean)
-  async updateRestaurant(
-    @Args('input') updateRestaurantDto: UpdateRestaurantDto, //ArgsType을 쓴다면 @Args의 값은 비워둬야된다
-  ): Promise<boolean> {
-    try {
-      await this.restaurantService.updateRestaurant(updateRestaurantDto);
-      return true;
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
+  @Mutation((returns) => CreateRestaurantOutput)
+  @Role(['Owner'])
+  async createRestaurant(
+    @AuthUser() authUser: User,
+    @Args('input') createRestaurantInput: CreateRestaurantInput,
+  ): Promise<CreateRestaurantOutput> {
+    return this.restaurantService.createRestaurant(
+      authUser,
+      createRestaurantInput,
+    );
   }
 }

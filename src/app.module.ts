@@ -15,6 +15,9 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
 import { AuthorizationModule } from './auth/auth.module';
 import { Verification } from './users/entities/verification.entity';
 import { MailModule } from './mail/mail.module';
+import { Category } from './restaurants/entitities/category.entity';
+import { Restaurant } from './restaurants/entitities/restaurant.entity';
+import { RestaurantsModule } from './restaurants/restaurants.module';
 
 @Module({
   imports: [
@@ -23,7 +26,7 @@ import { MailModule } from './mail/mail.module';
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
       ignoreEnvFile: process.env.NODE_ENV === 'prod',
       validationSchema: Joi.object({
-        NODE_ENV: Joi.string().valid('dev', 'prod'), //Joi는 환경변수 유효성검사
+        NODE_ENV: Joi.string().valid('dev', 'prod', 'test').required(), //Joi는 환경변수 유효성검사
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.string().required(),
         DB_USERNAME: Joi.string().required(),
@@ -43,8 +46,9 @@ import { MailModule } from './mail/mail.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
-      logging: process.env.NODE_ENV !== 'prod', //DB에서 돌아가는 로그 체크
-      entities: [User, Verification], //DB설정 DB는 Restaurant
+      logging:
+        process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test', //DB에서 돌아가는 로그 체크
+      entities: [User, Verification, Restaurant, Category], //DB설정 DB는 Restaurant
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true, //설정값이 정해져있으면 dynamic module
@@ -62,6 +66,9 @@ import { MailModule } from './mail/mail.module';
       domain: process.env.MAILGUN_DOMAIN_NAME,
       fromEmail: process.env.MAILGUN_FROM_EMAIL,
     }),
+    AuthorizationModule,
+    UsersModule,
+    RestaurantsModule,
   ],
   controllers: [],
   providers: [],
