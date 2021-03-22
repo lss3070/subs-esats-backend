@@ -5,6 +5,7 @@ import got from 'got';
 import * as FormData from 'form-data';
 import { EmailVar } from '../../dist/mail/mail.interfaces';
 
+
 @Injectable()
 export class MailService {
   constructor(
