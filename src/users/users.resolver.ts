@@ -12,6 +12,7 @@ import { AuthUser } from 'src/auth/auth-user.decorator';
 import { UserProfileInput, UserProfileOutput } from './dtos/user-profile.dto';
 import { EditProfileOutput, EditProfileInput } from './dtos/edit-profile.dto';
 import { VerifyEmailOutput, VerifyEmailInput } from './dtos/verify-email.dto';
+import { Role } from 'src/auth/role.decorator';
 
 @Resolver((of) => User)
 export class UserResolver {
@@ -35,10 +36,12 @@ export class UserResolver {
   }
 
   @Query((returns) => User)
+  @Role(['Any'])
   @UseGuards(AuthGuard) //endpoint
   me(@AuthUser() authUser: User) {
     return authUser;
   }
+  @Role(['Any'])
   @UseGuards(AuthGuard) //endpoint
   @Query((returns) => UserProfileOutput)
   async userProfile(

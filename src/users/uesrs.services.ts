@@ -46,9 +46,9 @@ export class UserService {
       );
       this.mailService.sendVerificationEmail(user.email, verification.code);
       return { ok: true, error: null };
-    } catch (e) {
+    } catch (error) {
       //make error
-      return { ok: false, error: "There is a user with that email already" };
+      return { ok: false, error };
     }
     //check new user
     // create user & hash the password
