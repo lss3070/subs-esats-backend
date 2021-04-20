@@ -52,3 +52,16 @@ app module에서 context는 아폴로에서나 모든 resolver에서 데이터�
 
 ## Unit test
 - 7.4,8,9.2ing...
+
+## the backend of suber eats clone
+- See Categories
+- See Restaurants by Category(pagination)
+- See Restaurants (pagination)
+- See Restaurant
+
+- Edit Restaurant
+- Delete Restaurant
+
+- Creatre Dish
+- Edit Dish
+- Delete Dish
