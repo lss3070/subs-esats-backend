@@ -21,6 +21,7 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
 import { Dish } from './restaurants/entitities/dish.entity';
 import { OrdersModule } from './orders/orders.module';
 import { Order } from './orders/entities/order.entity';
+import { OrderItem } from './orders/entities/order-item.entity';
 
 @Module({
   imports: [
@@ -51,7 +52,15 @@ import { Order } from './orders/entities/order.entity';
       synchronize: process.env.NODE_ENV !== 'prod',
       logging:
         process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test', //DB에서 돌아가는 로그 체크
-      entities: [User, Verification, Restaurant, Category, Dish, Order], //DB설정 DB는 Restaurant
+      entities: [
+        User,
+        Verification,
+        Restaurant,
+        Category,
+        Dish,
+        Order,
+        OrderItem,
+      ], //DB설정 DB는 Restaurant
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true, //설정값이 정해져있으면 dynamic module

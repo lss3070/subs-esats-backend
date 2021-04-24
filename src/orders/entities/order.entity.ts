@@ -5,15 +5,25 @@ import {
   ObjectType,
   registerEnumType,
 } from '@nestjs/graphql';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  RelationId,
+} from 'typeorm';
 import { Restaurant } from '../../restaurants/entitities/restaurant.entity';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { User } from '../../users/entities/user.entity';
 import { Dish } from 'src/restaurants/entitities/dish.entity';
+import { OrderItem } from './order-item.entity';
+import { IsEnum, IsNumber } from 'class-validator';
 
 export enum OrderStatus {
   Pending = 'Pending',
   Cooking = 'Cooking',
+  Cooked = 'Cooked',
   PickedUp = 'PickedUp',
   Deliverd = 'Deliverd',
 }
@@ -30,6 +40,10 @@ export class Order extends CoreEntity {
     nullable: true,
   })
   customer?: User;
+
+  @RelationId((order: Order) => order.customer)
+  customerId: number;
+
   @Field((type) => User, { nullable: true })
   @ManyToOne((type) => User, (user) => user.orders, {
     onDelete: 'SET NULL',
@@ -37,23 +51,28 @@ export class Order extends CoreEntity {
   })
   driver?: User;
 
-  @Field((type) => Restaurant)
+  @RelationId((order: Order) => order.driver)
+  driverId: number;
+
+  @Field((type) => Restaurant, { nullable: true })
   @ManyToOne((type) => Restaurant, (restaurant) => restaurant.orders, {
     onDelete: 'SET NULL',
     nullable: true,
   })
-  restaurant: Restaurant;
+  restaurant?: Restaurant;
 
-  @Field((type) => [Dish])
-  @ManyToMany((type) => Dish)
+  @Field((type) => [OrderItem])
+  @ManyToMany((type) => OrderItem)
   @JoinTable()
-  dishes: Dish[];
+  items: OrderItem[];
 
   @Field((type) => Float, { nullable: true })
-  @Column()
+  @Column({ nullable: true })
+  @IsNumber()
   total?: number;
 
   @Field((type) => OrderStatus)
-  @Column({ type: 'enum', enum: OrderStatus })
+  @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.Pending })
+  @IsEnum(OrderStatus)
   status: OrderStatus;
 }
