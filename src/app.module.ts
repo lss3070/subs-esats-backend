@@ -22,6 +22,7 @@ import { Dish } from './restaurants/entitities/dish.entity';
 import { OrdersModule } from './orders/orders.module';
 import { Order } from './orders/entities/order.entity';
 import { OrderItem } from './orders/entities/order-item.entity';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -63,8 +64,14 @@ import { OrderItem } from './orders/entities/order-item.entity';
       ], //DB설정 DB는 Restaurant
     }),
     GraphQLModule.forRoot({
+      installSubscriptionHandlers: true, //서버에서 웹소켓 기능을 가지게됨
       autoSchemaFile: true, //설정값이 정해져있으면 dynamic module
-      context: ({ req }) => ({ user: req['user'] }), //request받은 user데이터를 공유하는것... context 매  res마다 호출되는것..
+      context: ({ req, connection }) => {
+        const TOKEN_KEY = 'x-jwt';
+        return {
+          token: req ? req.headers[TOKEN_KEY] : connection.context[TOKEN_KEY],
+        };
+      }, //request받은 user데이터를 공유하는것... context 매  res마다 호출되는것..
     }),
     // RestaurantsModule,
     JwtModule.forRoot({
@@ -82,6 +89,7 @@ import { OrderItem } from './orders/entities/order-item.entity';
     UsersModule,
     RestaurantsModule,
     OrdersModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [],
