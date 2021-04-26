@@ -8,9 +8,16 @@ import { Role } from 'src/auth/role.decorator';
 import { GetOrdersInput, GetOrdersOutput } from './dtos/get-orders.dto';
 import { GetOrderInput, GetOrderOutput } from './dtos/get-order.dto';
 import { EditOrderInput, EditOrderOutput } from './dtos/edit-order.dto';
-import { PUB_SUB } from '../common/commonconstants';
+import {
+  PUB_SUB,
+  NEW_PENDING_ORDER,
+  NEW_COOKED_ORDER,
+} from '../common/commonconstants';
 import { Inject } from '@nestjs/common';
 import { PubSub } from 'graphql-subscriptions';
+import { OrderUpdatesInput } from './dtos/order-updates.dto';
+import { NEW_ORDER_UPDATE } from '../common/commonconstants';
+import { TakeOrderInput, TakeOrderOutput } from './dtos/take-order.dto';
 
 @Resolver((of) => Order)
 export class OrderResolver {
@@ -55,21 +62,52 @@ export class OrderResolver {
     return this.OrdersService.editOrder(user, editOrderInput);
   }
 
-  @Mutation((returns) => Boolean)
-  async summerReady(@Args('summerId') summerId: number) {
-    await this.pubSub.publish('hotSummer', {
-      readySummer: summerId,
-    });
-    return true;
+  @Subscription((returns) => Order, {
+    filter: ({ pendingOrders: { ownerId } }, _, { user }) => {
+      console.log(ownerId, user.id);
+      return ownerId === user.id;
+    },
+    resolve: ({ pendingOrders: { order } }) => order,
+  })
+  @Role(['Owner'])
+  pendingOrders() {
+    return this.pubSub.asyncIterator(NEW_PENDING_ORDER);
   }
 
-  @Subscription((returns) => String, {
-    filter: ({ readySummer }, { summerId }) => {
-      return readySummer === summerId;
+  @Subscription((returns) => Order)
+  @Role(['Delivery'])
+  cookedOrders() {
+    return this.pubSub.asyncIterator(NEW_COOKED_ORDER);
+  }
+  @Subscription((returns) => Order, {
+    filter: (
+      { orderUpdates: order }: { orderUpdates: Order },
+      { input }: { input: OrderUpdatesInput },
+      { user }: { user: User },
+    ) => {
+      if (
+        order.driverId !== user.id &&
+        order.customerId &&
+        user.id &&
+        order.restaurant.ownerId !== user.id
+      ) {
+        return false;
+      }
+      return order.id === input.id;
     },
   })
   @Role(['Any'])
-  readySummer(@Args('summerId') summerId: number) {
-    return this.pubSub.asyncIterator('hotSummer');
+  orderUpdates(@Args('input') orderUpdatesInput: OrderUpdatesInput) {
+    const temp = this.pubSub.asyncIterator(NEW_ORDER_UPDATE);
+    console.log(temp);
+    return temp;
+  }
+  @Mutation((returns) => TakeOrderOutput)
+  @Role(['Delivery'])
+  takeOrder(
+    @AuthUser() driver: User,
+    @Args('input') takeOrderInput: TakeOrderInput,
+  ): Promise<TakeOrderOutput> {
+    return this.OrdersService.takeOrder(driver, takeOrderInput);
   }
 }
