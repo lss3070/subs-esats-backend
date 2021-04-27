@@ -5,10 +5,7 @@ import {
 } from '../../common/dtos/pagination.dto';
 import { Restaurant } from '../entitities/restaurant.entity';
 @InputType()
-export class RestaurantInput extends PaginationInput {
-  @Field((type) => Int)
-  restaurantId: number;
-}
+export class RestaurantsInput extends PaginationInput {}
 
 @ObjectType()
 export class RestaurantsOutput extends PaginationOutput {

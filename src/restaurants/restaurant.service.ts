@@ -15,12 +15,12 @@ import {
 import { CategoryRepository } from './repository/category.repository';
 import { AllCategoriesOutput } from './dto/all-categories.dto';
 import { CategoryInput, CategoryOutput } from './dto/category.dto';
-import { RestaurantInput, RestaurantsOutput } from './dto/restaurants.dto';
+import { RestaurantsInput, RestaurantsOutput } from './dto/restaurants.dto';
 import {
   DeleteRestaurantInput,
   DeleteRestaurantOutput,
 } from './dto/delete-restaurant.dto';
-import { RestaurantOutput } from './dto/restaurant.dto';
+import { RestaurantInput, RestaurantOutput } from './dto/restaurant.dto';
 import { CreateDishInput, CreateDishOutput } from './dto/create-dish.dto';
 import {
   SearchRestaurantInput,
@@ -176,6 +176,9 @@ export class RestaurantService {
         where: {
           category,
         },
+        order: {
+          isPromoted: 'DESC',
+        },
         take: 25,
         skip: (page - 1) * 25,
       });
@@ -194,11 +197,14 @@ export class RestaurantService {
     }
   }
 
-  async allRestaurants({ page }: RestaurantInput): Promise<RestaurantsOutput> {
+  async allRestaurants({ page }: RestaurantsInput): Promise<RestaurantsOutput> {
     try {
       const [restaurants, totalResults] = await this.restaurants.findAndCount({
         skip: (page - 1) * 25,
         take: 25,
+        order: {
+          isPromoted: 'DESC',
+        },
       });
       return {
         ok: true,
