@@ -41,7 +41,7 @@ export class UserResolver {
     return authUser;
   }
   @Role(['Any'])
-  @UseGuards(AuthGuard) //endpoint
+  // @UseGuards(AuthGuard) //endpoint
   @Query((returns) => UserProfileOutput)
   async userProfile(
     @Args() userProfileInput: UserProfileInput,
@@ -49,7 +49,8 @@ export class UserResolver {
     return this.usersService.findById(userProfileInput.userId);
   }
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
+  @Role(['Any'])
   @Mutation((returns) => EditProfileOutput)
   async editProfile(
     @AuthUser() authUser: User,

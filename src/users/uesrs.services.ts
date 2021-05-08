@@ -114,6 +114,7 @@ export class UserService {
       if (email) {
         user.email = email;
         user.verified = false;
+        await this.vertifications.delete({ user: { id: user.id } });
         const verification = await this.vertifications.save(
           this.vertifications.create({
             user,

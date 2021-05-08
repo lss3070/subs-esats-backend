@@ -6,6 +6,7 @@ import * as request from 'supertest';
 import { AllowdRoles } from './role.decorator';
 import { JwtService } from '../jwt/jwt.service';
 import { UserService } from '../users/uesrs.services';
+import { decode } from 'jsonwebtoken';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -28,19 +29,15 @@ export class AuthGuard implements CanActivate {
       const decoded = this.jwtService.verify(token.toString());
       if (typeof decoded === 'object' && decoded.hasOwnProperty('id')) {
         const { user } = await this.userService.findById(decoded['id']);
-        if (!user) {
-          return false;
+        if (user) {
+          gqlContext['user'] = user;
         }
-        gqlContext['user'] = user;
         if (roles.includes('Any')) {
           return true;
         }
         return roles.includes(user.role);
-      } else {
-        return false;
       }
-    } else {
-      return false;
     }
+    return false;
   }
 }
