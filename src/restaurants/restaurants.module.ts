@@ -6,7 +6,7 @@ import {
   DishResolver,
 } from './restaurants.resolver';
 import { Restaurant } from './entitities/restaurant.entity';
-import { RestaurantService } from './restaurant.service';
+import { RestaurantService } from './restaurants.service';
 import { Category } from './entitities/category.entity';
 import { CategoryRepository } from './repository/category.repository';
 import { Dish } from './entitities/dish.entity';

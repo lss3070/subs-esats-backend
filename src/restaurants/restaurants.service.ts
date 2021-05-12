@@ -29,6 +29,7 @@ import {
 import { Dish } from './entitities/dish.entity';
 import { EditDishInput, EditDishOutput } from './dto/edit-dish.dto';
 import { DeleteDishInput, DeleteDishOutput } from './dto/delete-dish.dot';
+import { MyRestaurantsOutput } from './dto/myrestaurants.dto';
 //Service가 db에 접근
 @Injectable()
 export class RestaurantService {
@@ -370,6 +371,21 @@ export class RestaurantService {
       return {
         ok: false,
         error: 'Could not delete dish',
+      };
+    }
+  }
+
+  async myRestaurants(owner: User): Promise<MyRestaurantsOutput> {
+    try {
+      const restaurants = await this.restaurants.find({ owner });
+      return {
+        restaurants,
+        ok: true,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: 'Could not find restaurants.',
       };
     }
   }
