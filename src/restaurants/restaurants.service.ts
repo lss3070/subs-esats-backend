@@ -29,7 +29,8 @@ import {
 import { Dish } from './entitities/dish.entity';
 import { EditDishInput, EditDishOutput } from './dto/edit-dish.dto';
 import { DeleteDishInput, DeleteDishOutput } from './dto/delete-dish.dot';
-import { MyRestaurantsOutput } from './dto/myrestaurants.dto';
+import { MyRestaurantsOutput } from './dto/my-restaurants.dto';
+import { MyRestaurantInput, MyRestaurantOutput } from './dto/my-restaurant.dto';
 //Service가 db에 접근
 @Injectable()
 export class RestaurantService {
@@ -48,6 +49,7 @@ export class RestaurantService {
   ): Promise<CreateRestaurantOutput> {
     try {
       const newRestaurant = this.restaurants.create(createRestaurantInput); //newRestaurant에서 create를 부르면 restaurant의 인스턴스를 생성하지만 db에는 저장하지 않는다.
+      console.log(newRestaurant);
       newRestaurant.owner = owner;
       const category = await this.categories.getOrCreate(
         createRestaurantInput.categoryName,
@@ -387,6 +389,23 @@ export class RestaurantService {
       return {
         ok: false,
         error: 'Could not find restaurants.',
+      };
+    }
+  }
+  async myRestaurant(
+    owner: User,
+    { id }: MyRestaurantInput,
+  ): Promise<MyRestaurantOutput> {
+    try {
+      const restaurant = await this.restaurants.findOne({ owner, id });
+      return {
+        restaurant,
+        ok: true,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: 'Could not find restaurant.',
       };
     }
   }
