@@ -19,8 +19,8 @@ import { Order } from 'src/orders/entities/order.entity';
 @ObjectType()
 @Entity() //decorator
 export class Restaurant extends CoreEntity {
-  @Field((type) => String)
-  @Column()
+  @Field((type) => String, { nullable: true })
+  @Column({ nullable: true })
   @IsString()
   @Length(5)
   name: string;
