@@ -37,6 +37,7 @@ export class OrdersService {
     customer: User,
     { restaurantId, items }: CreateOrderInput,
   ): Promise<CreateOrderOutput> {
+    console.log(customer);
     try {
       const restaurant = await this.restaurants.findOne(restaurantId);
       if (!restaurant) {
@@ -64,7 +65,7 @@ export class OrdersService {
             if (dishOption.extra) {
               dishFinalPrice += dishOption.extra;
             } else {
-              const dishOptionChoice = dishOption.choices.find(
+              const dishOptionChoice = dishOption.choices?.find(
                 (optionChoice) => optionChoice.name === itemOption.choice,
               );
               if (dishOptionChoice) {
@@ -97,6 +98,7 @@ export class OrdersService {
       });
       return {
         ok: true,
+        orderId: order.id,
       };
     } catch (error) {
       return {
@@ -192,14 +194,10 @@ export class OrdersService {
     if (user.role === UserRole.Client && order.customerId !== user.id) {
       canSee = false;
     }
-    if (user.role === UserRole.Delivery && order.customerId !== user.id) {
+    if (user.role === UserRole.Delivery && order.driverId !== user.id) {
       canSee = false;
     }
-    if (
-      user.role === UserRole.Owner &&
-      order.driverId !== user.id &&
-      order.restaurant.ownerId != user.id
-    ) {
+    if (user.role === UserRole.Owner && order.restaurant.ownerId != user.id) {
       canSee = false;
     }
     return canSee;
@@ -296,7 +294,8 @@ export class OrdersService {
       return {
         ok: true,
       };
-    } catch {
+    } catch (e) {
+      console.log(e);
       return {
         ok: false,
         error: 'Could not update order',

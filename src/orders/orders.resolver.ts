@@ -28,6 +28,7 @@ export class OrderResolver {
   ) {}
 
   @Mutation((returns) => CreateOrderOutput)
+  @Role(['Client'])
   async createOrder(
     @AuthUser() customer: User,
     @Args('input')
