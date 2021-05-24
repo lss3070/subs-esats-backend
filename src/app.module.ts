@@ -69,6 +69,7 @@ import { UploadsModule } from './uploads/uploads.module';
       ], //DB설정 DB는 Restaurant
     }),
     GraphQLModule.forRoot({
+      playground: process.env.NODE_ENV !== 'production',
       installSubscriptionHandlers: true, //서버에서 웹소켓 기능을 가지게됨
       autoSchemaFile: true, //설정값이 정해져있으면 dynamic module
       context: ({ req, connection }) => {
