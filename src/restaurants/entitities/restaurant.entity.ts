@@ -14,6 +14,13 @@ import { User } from '../../users/entities/user.entity';
 import { Dish } from './dish.entity';
 import { Order } from 'src/orders/entities/order.entity';
 
+@InputType('DishDivisionChoiceInputType', { isAbstract: true })
+@ObjectType()
+export class DishDivisionOption {
+  @Field((type) => String)
+  name: string;
+}
+
 //entity 파일은 db틀이라고 생각하면 될듯 여기서 DB의 모델을 생성하고 자동으로 graphql에 스키마 작성
 @InputType('RestaurantInputType', { isAbstract: true })
 @ObjectType()
@@ -66,4 +73,8 @@ export class Restaurant extends CoreEntity {
   @Field((type) => Date, { nullable: true })
   @Column({ nullable: true })
   promotedUtil: Date;
+
+  @Field((type) => [DishDivisionOption], { nullable: true })
+  @Column({ type: 'json', nullable: true })
+  dishDivision?: DishDivisionOption[];
 }
