@@ -23,6 +23,21 @@ export class DishOption {
   extra?: number;
 }
 
+@InputType('DishDivisionInputType', { isAbstract: true })
+@ObjectType()
+export class DishDivision {
+  @Field((type) => String)
+  name: string;
+}
+@InputType('DishDivisionOptionInputType', { isAbstract: true })
+@ObjectType()
+export class DishDivisionOption {
+  @Field((type) => String)
+  name: string;
+  @Field((type) => [DishDivision], { nullable: true })
+  divisions?: DishDivision[];
+}
+
 @InputType('CategoryInputTYpe', { isAbstract: true })
 @ObjectType()
 @Entity()
@@ -60,8 +75,4 @@ export class Dish extends CoreEntity {
   @Field((type) => [DishOption], { nullable: true })
   @Column({ type: 'json', nullable: true })
   options?: DishOption[];
-
-  @Field((type) => String, { nullable: true })
-  @Column({ nullable: true })
-  division: string;
 }

@@ -27,6 +27,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { Payment } from './payments/entities/payment.entity';
 import { ScheduleModule } from '@nestjs/schedule';
 import { UploadsModule } from './uploads/uploads.module';
+import { RestaurantDivision } from './restaurants/entitities/restaurant-division';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { UploadsModule } from './uploads/uploads.module';
         Dish,
         Order,
         OrderItem,
+        RestaurantDivision,
         Payment,
       ], //DB설정 DB는 Restaurant
     }),

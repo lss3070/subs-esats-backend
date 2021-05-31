@@ -13,7 +13,11 @@ import { CoreOutput } from 'src/common/dtos/output.dto';
 export class CreateRestaurantInput extends PickType(Restaurant, [
   'name',
   'coverImg',
+  'zipCode',
   'address',
+  'detailAddress',
+  'description',
+  'divisions',
 ]) {
   @Field((type) => String)
   categoryName: string;

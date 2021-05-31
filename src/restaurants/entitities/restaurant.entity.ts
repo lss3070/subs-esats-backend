@@ -1,8 +1,10 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { IsString, Length } from 'class-validator';
+import { IsNumber, IsString, Length } from 'class-validator';
 import {
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -14,9 +16,9 @@ import { User } from '../../users/entities/user.entity';
 import { Dish } from './dish.entity';
 import { Order } from 'src/orders/entities/order.entity';
 
-@InputType('DishDivisionChoiceInputType', { isAbstract: true })
+@InputType('DivisionInputType', { isAbstract: true })
 @ObjectType()
-export class DishDivisionOption {
+export class RestaurantDivision {
   @Field((type) => String)
   name: string;
 }
@@ -37,10 +39,25 @@ export class Restaurant extends CoreEntity {
   @IsString()
   coverImg: string;
 
+  @Field((type) => Number, { nullable: true })
+  @Column({ nullable: true })
+  @IsNumber()
+  zipCode: number;
+
   @Field((type) => String)
   @Column()
   @IsString()
   address: string;
+
+  @Field((type) => String, { nullable: true })
+  @Column({ nullable: true })
+  @IsString()
+  detailAddress: string;
+
+  @Field((type) => String, { nullable: true })
+  @Column({ nullable: true })
+  @IsString()
+  description: string;
 
   @Field((type) => Category, { nullable: true })
   @ManyToOne((type) => Category, (category) => category.restaurants, {
@@ -74,7 +91,11 @@ export class Restaurant extends CoreEntity {
   @Column({ nullable: true })
   promotedUtil: Date;
 
-  @Field((type) => [DishDivisionOption], { nullable: true })
+  // @Field((type) => [DishDivisionOption], { nullable: true })
+  // @Column({ type: 'json', nullable: true })
+  // dishDivision?: DishDivisionOption[];
+
+  @Field((type) => [RestaurantDivision])
   @Column({ type: 'json', nullable: true })
-  dishDivision?: DishDivisionOption[];
+  divisions: RestaurantDivision[];
 }
