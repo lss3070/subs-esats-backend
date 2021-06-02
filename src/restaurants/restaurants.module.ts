@@ -10,14 +10,14 @@ import { RestaurantService } from './restaurants.service';
 import { Category } from './entitities/category.entity';
 import { CategoryRepository } from './repository/category.repository';
 import { Dish } from './entitities/dish.entity';
-import { RestaurantDivision } from './entitities/restaurant-division';
+import { DishDivision } from './entitities/dish-division';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Restaurant,
       Dish,
-      RestaurantDivision,
+      DishDivision,
       CategoryRepository,
     ]),
   ], // 순서 1.module에 repsittory imort함 2.restaurantService aksemfdjtj restaurantResolver import 3.restaurantResolver restaurantService.getAll returnㅡㅇㄹ함

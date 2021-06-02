@@ -31,7 +31,7 @@ import { EditDishInput, EditDishOutput } from './dto/edit-dish.dto';
 import { DeleteDishInput, DeleteDishOutput } from './dto/delete-dish.dot';
 import { MyRestaurantsOutput } from './dto/my-restaurants.dto';
 import { MyRestaurantInput, MyRestaurantOutput } from './dto/my-restaurant.dto';
-import { RestaurantDivision } from './entitities/restaurant-division';
+import { DishDivision } from './entitities/dish-division';
 //Service가 db에 접근
 @Injectable()
 export class RestaurantService {
@@ -39,8 +39,8 @@ export class RestaurantService {
   constructor(
     @InjectRepository(Restaurant) //전달받은 Restaurant entity를 토대로 레포지토리 생성
     private readonly restaurants: Repository<Restaurant>,
-    @InjectRepository(RestaurantDivision)
-    private readonly restaurantDivisions: Repository<RestaurantDivision>,
+    // @InjectRepository(DishDivision)
+    // private readonly dishDivisions: Repository<DishDivision>,
     @InjectRepository(Dish)
     private readonly dishes: Repository<Dish>,
     private readonly categories: CategoryRepository,
@@ -301,6 +301,12 @@ export class RestaurantService {
       await this.dishes.save(
         this.dishes.create({ ...createDishInput, restaurant }),
       );
+      // const dishDivision = await this.dishDivisions.save(
+      //   this.dishDivisions.create({
+      //     dish: dish,
+      //     divisions: createDishInput.divisions,
+      //   }),
+      // );
       return {
         ok: true,
       };

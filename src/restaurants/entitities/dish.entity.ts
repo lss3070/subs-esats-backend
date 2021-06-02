@@ -75,4 +75,8 @@ export class Dish extends CoreEntity {
   @Field((type) => [DishOption], { nullable: true })
   @Column({ type: 'json', nullable: true })
   options?: DishOption[];
+
+  @Field((type) => [DishDivision], { nullable: true })
+  @Column({ type: 'json', nullable: true })
+  divisions?: DishDivision[];
 }

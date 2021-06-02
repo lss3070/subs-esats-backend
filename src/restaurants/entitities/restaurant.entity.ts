@@ -91,10 +91,6 @@ export class Restaurant extends CoreEntity {
   @Column({ nullable: true })
   promotedUtil: Date;
 
-  // @Field((type) => [DishDivisionOption], { nullable: true })
-  // @Column({ type: 'json', nullable: true })
-  // dishDivision?: DishDivisionOption[];
-
   @Field((type) => [RestaurantDivision])
   @Column({ type: 'json', nullable: true })
   divisions: RestaurantDivision[];

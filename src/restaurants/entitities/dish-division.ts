@@ -3,9 +3,9 @@ import { CoreEntity } from 'src/common/entities/core.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { Dish } from './dish.entity';
 
-@InputType('RestaurantDivisionChoiceInputType', { isAbstract: true })
+@InputType('DishDivisionChoiceInputType', { isAbstract: true })
 @ObjectType()
-export class RestaurantDivisionOption {
+export class DishDivisionOption {
   @Field((type) => String)
   name: string;
 }
@@ -13,12 +13,12 @@ export class RestaurantDivisionOption {
 @InputType('RestaurantDivisionInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
-export class RestaurantDivision extends CoreEntity {
+export class DishDivision extends CoreEntity {
   @Field((type) => Dish)
   @ManyToOne((type) => Dish, { nullable: true, onDelete: 'CASCADE' })
   dish: Dish;
 
-  @Field((type) => [RestaurantDivisionOption], { nullable: true })
+  @Field((type) => [DishDivisionOption], { nullable: true })
   @Column({ type: 'json', nullable: true })
-  divisions?: RestaurantDivisionOption[];
+  divisions?: DishDivisionOption[];
 }
