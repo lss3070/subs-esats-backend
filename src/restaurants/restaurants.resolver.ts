@@ -109,7 +109,6 @@ export class RestaurantResolver {
   searchRestaurant(
     @Args('input') searchRestaurantInput: SearchRestaurantInput,
   ): Promise<SearchRestaurantOutput> {
-    console.log('~~~');
     return this.restaurantService.searchRestaurantByName(searchRestaurantInput);
   }
 }

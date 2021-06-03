@@ -91,7 +91,7 @@ export class Restaurant extends CoreEntity {
   @Column({ nullable: true })
   promotedUtil: Date;
 
-  @Field((type) => [RestaurantDivision])
+  @Field((type) => [RestaurantDivision], { nullable: true })
   @Column({ type: 'json', nullable: true })
   divisions: RestaurantDivision[];
 }
