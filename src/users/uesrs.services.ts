@@ -28,6 +28,9 @@ export class UserService {
     email,
     password,
     role,
+    zipCode,
+    address,
+    detailAddress,
   }: CreateAccountInput): Promise<CreateAccountOutput> {
     try {
       const exists = await this.users.findOne({ email });
@@ -37,7 +40,14 @@ export class UserService {
         return { ok: false, error: 'There is a user with that email aleray' };
       }
       const user = await this.users.save(
-        this.users.create({ email, password, role }),
+        this.users.create({
+          email,
+          password,
+          role,
+          zipCode,
+          address,
+          detailAddress,
+        }),
       );
       const verification = await this.vertifications.save(
         this.vertifications.create({

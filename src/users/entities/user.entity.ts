@@ -8,7 +8,13 @@ import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import { CoreEntity } from '../../common/entities/core.entity';
 import * as bcrypt from 'bcrypt';
 import { InternalServerErrorException } from '@nestjs/common';
-import { IsBoolean, IsEmail, IsEnum, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsEnum,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 import { Restaurant } from '../../restaurants/entitities/restaurant.entity';
 import { Order } from '../../orders/entities/order.entity';
 import { Payment } from 'src/payments/entities/payment.entity';
@@ -45,6 +51,21 @@ export class User extends CoreEntity {
   @Field((type) => Boolean)
   @IsBoolean()
   verified: boolean;
+
+  @Field((type) => Number, { nullable: true })
+  @Column({ nullable: true })
+  @IsNumber()
+  zipCode: number;
+
+  @Field((type) => String, { nullable: true })
+  @Column({ nullable: true })
+  @IsString()
+  address: string;
+
+  @Field((type) => String, { nullable: true })
+  @Column({ nullable: true })
+  @IsString()
+  detailAddress: string;
 
   @Field((type) => [Restaurant])
   @OneToMany((type) => Restaurant, (restaurant) => restaurant.owner)

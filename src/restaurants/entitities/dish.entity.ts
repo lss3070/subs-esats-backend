@@ -21,6 +21,8 @@ export class DishOption {
   choices?: DishChoice[];
   @Field((type) => Int, { nullable: true })
   extra?: number;
+  @Field((type) => Boolean, { defaultValue: false })
+  require: boolean;
 }
 
 @InputType('DishDivisionInputType', { isAbstract: true })

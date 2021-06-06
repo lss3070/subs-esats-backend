@@ -125,11 +125,15 @@ export class OrdersService {
           break;
         case UserRole.Delivery:
           orders = await this.orders.find({
-            where: {
-              driver: user,
-              ...(status && { status }),
-            },
+            where: { ...(status && { status }) },
           });
+
+          // orders = await this.orders.find({
+          //   where: {
+          //     driver: user,
+          //     ...(status && { status }),
+          //   },
+          // });
           break;
         case UserRole.Owner:
           const restaurant = await this.restaurants.find({
@@ -145,6 +149,7 @@ export class OrdersService {
           }
           break;
       }
+      console.log('test1');
       return {
         ok: true,
         orders,
