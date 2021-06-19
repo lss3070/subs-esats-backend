@@ -18,6 +18,14 @@ import { PubSub } from 'graphql-subscriptions';
 import { OrderUpdatesInput } from './dtos/order-updates.dto';
 import { NEW_ORDER_UPDATE } from '../common/commonconstants';
 import { TakeOrderInput, TakeOrderOutput } from './dtos/take-order.dto';
+import {
+  GetMultipleOrdersInput,
+  GetMultipleOrdersOutput,
+} from './dtos/get-multiple-orders.dto';
+import {
+  ReceiptOrderInput,
+  ReceiptOrderOutput,
+} from './dtos/receipt-orders.dto';
 
 @Resolver((of) => Order)
 export class OrderResolver {
@@ -43,6 +51,15 @@ export class OrderResolver {
     @Args('input') getOrdersInput: GetOrdersInput,
   ): Promise<GetOrdersOutput> {
     return this.OrdersService.getOrders(user, getOrdersInput);
+  }
+
+  @Query((returns) => GetOrdersOutput)
+  @Role(['Any'])
+  async getMultipleOrders(
+    @AuthUser() user: User,
+    @Args('input') getMultipleOrdersInput: GetMultipleOrdersInput,
+  ): Promise<GetMultipleOrdersOutput> {
+    return this.OrdersService.getMultipleOrders(user, getMultipleOrdersInput);
   }
 
   @Query((returns) => GetOrderOutput)
@@ -110,5 +127,14 @@ export class OrderResolver {
     @Args('input') takeOrderInput: TakeOrderInput,
   ): Promise<TakeOrderOutput> {
     return this.OrdersService.takeOrder(driver, takeOrderInput);
+  }
+
+  @Mutation((returns) => ReceiptOrderOutput)
+  @Role(['Owner'])
+  receiptOrder(
+    @AuthUser() owner: User,
+    @Args('input') receiptOrderInput: ReceiptOrderInput,
+  ): Promise<ReceiptOrderOutput> {
+    return this.OrdersService.receiptOrder(receiptOrderInput);
   }
 }

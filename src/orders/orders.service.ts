@@ -18,6 +18,12 @@ import {
   NEW_COOKED_ORDER,
   NEW_ORDER_UPDATE,
 } from '../common/commonconstants';
+import axios from 'axios';
+import { GetMultipleOrdersInput } from './dtos/get-multiple-orders.dto';
+import {
+  ReceiptOrderInput,
+  ReceiptOrderOutput,
+} from './dtos/receipt-orders.dto';
 
 @Injectable()
 export class OrdersService {
@@ -124,9 +130,18 @@ export class OrdersService {
           });
           break;
         case UserRole.Delivery:
-          orders = await this.orders.find({
-            where: { ...(status && { status }) },
-          });
+          if (status === OrderStatus.Cooked) {
+            console.log('!!Cooked');
+            orders = await this.orders.find({
+              driverId: null,
+            });
+            console.log(orders);
+          } else {
+            console.log('!!예외!!');
+            orders = await this.orders.find({
+              where: { ...(status && { status }), driverId: user.id },
+            });
+          }
 
           // orders = await this.orders.find({
           //   where: {
@@ -150,11 +165,60 @@ export class OrdersService {
           break;
       }
       console.log('test1');
+      console.log(orders);
       return {
         ok: true,
         orders,
       };
-    } catch {
+    } catch (e) {
+      console.log(e);
+      console.log('error');
+      return {
+        ok: false,
+        error: 'Could not get orders',
+      };
+    }
+  }
+
+  async getMultipleOrders(
+    user: User,
+    { status }: GetMultipleOrdersInput,
+  ): Promise<GetOrdersOutput> {
+    try {
+      let orders: Order[];
+      switch (user.role) {
+        case UserRole.Client:
+          break;
+        case UserRole.Delivery:
+          const deliveryItem = status.map((el) => {
+            return { status: el };
+          });
+          orders = await this.orders.find({
+            where: deliveryItem,
+          });
+          // orders = await this.orders.find({
+          //   where: {
+          //     driver: user,
+          //     ...(status && { status }),
+          //   },
+          // });
+          break;
+        case UserRole.Owner:
+          const ownerItem = status.map((el) => {
+            return { status: el };
+          });
+          orders = await this.orders.find({
+            where: ownerItem,
+          });
+          break;
+      }
+      return {
+        ok: true,
+        orders,
+      };
+    } catch (e) {
+      console.log(e);
+      console.log('error');
       return {
         ok: false,
         error: 'Could not get orders',
@@ -268,6 +332,39 @@ export class OrdersService {
       return {
         ok: false,
         error: 'Could not edit order',
+      };
+    }
+  }
+
+  async receiptOrder({
+    id: orderId,
+    status,
+    deliveryTime,
+  }: ReceiptOrderInput): Promise<ReceiptOrderOutput> {
+    try {
+      const order = await this.orders.findOne(orderId);
+      if (!order) {
+        return {
+          ok: false,
+          error: 'Order not found',
+        };
+      }
+      await this.orders.save({
+        id: orderId,
+        status,
+        deliveryTime,
+      });
+      await this.pubSub.publish(NEW_ORDER_UPDATE, {
+        orderUpdates: { ...order, status, deliveryTime },
+      });
+      return {
+        ok: true,
+      };
+    } catch (e) {
+      console.log(e);
+      return {
+        ok: false,
+        error: 'Could not update order',
       };
     }
   }

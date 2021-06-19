@@ -54,6 +54,7 @@ export class Order extends CoreEntity {
   driver?: User;
 
   @RelationId((order: Order) => order.driver)
+  @Column({ nullable: true })
   driverId: number;
 
   @Field((type) => Restaurant, { nullable: true })
@@ -78,4 +79,8 @@ export class Order extends CoreEntity {
   @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.Pending })
   @IsEnum(OrderStatus)
   status: OrderStatus;
+
+  @Field((type) => Number, { nullable: true })
+  @Column({ nullable: true })
+  deliveryTime: OrderStatus;
 }
