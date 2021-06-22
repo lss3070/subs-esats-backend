@@ -188,6 +188,14 @@ export class OrdersService {
       let orders: Order[];
       switch (user.role) {
         case UserRole.Client:
+          orders = await this.orders.find({
+            where: {
+              customerId: user.id,
+            },
+            order: {
+              id: 'DESC',
+            },
+          });
           break;
         case UserRole.Delivery:
           const deliveryItem = status.map((el) => {
@@ -210,8 +218,10 @@ export class OrdersService {
           orders = await this.orders.find({
             where: ownerItem,
           });
+          orders = orders.filter((el) => el.restaurant.ownerId === user.id);
           break;
       }
+
       return {
         ok: true,
         orders,

@@ -43,6 +43,7 @@ export class Order extends CoreEntity {
   customer?: User;
 
   @RelationId((order: Order) => order.customer)
+  @Column({ nullable: true })
   customerId: number;
 
   @Field((type) => User, { nullable: true })
@@ -82,5 +83,5 @@ export class Order extends CoreEntity {
 
   @Field((type) => Number, { nullable: true })
   @Column({ nullable: true })
-  deliveryTime: OrderStatus;
+  deliveryTime: number;
 }

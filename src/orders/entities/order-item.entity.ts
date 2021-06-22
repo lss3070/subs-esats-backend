@@ -16,10 +16,6 @@ export class OrderItemOption {
 @ObjectType()
 @Entity()
 export class OrderItem extends CoreEntity {
-  @Field((type) => Dish)
-  @ManyToOne((type) => Dish, { nullable: true, onDelete: 'CASCADE' })
-  dish: Dish;
-
   @Field((type) => Number, { nullable: true })
   @Column({ nullable: true })
   count: number;
@@ -27,4 +23,11 @@ export class OrderItem extends CoreEntity {
   @Field((type) => [OrderItemOption], { nullable: true })
   @Column({ type: 'json', nullable: true })
   options?: OrderItemOption[];
+
+  @Field((type) => Dish)
+  @ManyToOne((type) => Dish, (dish) => dish.orderItems, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
+  dish: Dish;
 }

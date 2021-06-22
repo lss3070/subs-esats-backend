@@ -5,7 +5,7 @@ import { Order, OrderStatus } from '../entities/order.entity';
 @InputType()
 export class GetMultipleOrdersInput {
   @Field((type) => [OrderStatus], { nullable: true })
-  status: OrderStatus[];
+  status?: OrderStatus[];
 }
 
 @ObjectType()
