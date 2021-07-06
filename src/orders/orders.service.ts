@@ -221,7 +221,6 @@ export class OrdersService {
           orders = orders.filter((el) => el.restaurant.ownerId === user.id);
           break;
       }
-
       return {
         ok: true,
         orders,
@@ -251,12 +250,12 @@ export class OrdersService {
         };
       }
 
-      if (!this.canSeeOrder(user, order)) {
-        return {
-          ok: false,
-          error: 'You cant see that',
-        };
-      }
+      // if (!this.canSeeOrder(user, order)) {
+      //   return {
+      //     ok: false,
+      //     error: 'You cant see that',
+      //   };
+      // }
       return {
         ok: true,
         order,
@@ -304,7 +303,11 @@ export class OrdersService {
         canEdit = false;
       }
       if (user.role === UserRole.Owner) {
-        if (status !== OrderStatus.Cooking && status !== OrderStatus.Cooked) {
+        if (
+          status !== OrderStatus.Cooking &&
+          status !== OrderStatus.Cooked &&
+          status !== OrderStatus.Canceled
+        ) {
           canEdit = false;
         }
       }

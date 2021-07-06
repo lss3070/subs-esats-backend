@@ -210,8 +210,8 @@ export class RestaurantService {
   async allRestaurants({ page }: RestaurantsInput): Promise<RestaurantsOutput> {
     try {
       const [restaurants, totalResults] = await this.restaurants.findAndCount({
-        skip: (page - 1) * 6,
-        take: 6,
+        skip: (page - 1) * 8,
+        take: 8,
         order: {
           isPromoted: 'DESC',
         },
@@ -219,7 +219,7 @@ export class RestaurantService {
       return {
         ok: true,
         results: restaurants,
-        totalPages: Math.ceil(totalResults / 6),
+        totalPages: Math.ceil(totalResults / 8),
         totalResults,
       };
     } catch {
@@ -282,6 +282,7 @@ export class RestaurantService {
     createDishInput: CreateDishInput,
   ): Promise<CreateDishOutput> {
     try {
+      console.log('!!!!');
       const restaurant = await this.restaurants.findOne(
         createDishInput.restaurantId,
       );

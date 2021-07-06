@@ -143,6 +143,7 @@ export class DishResolver {
     @AuthUser() owner: User,
     @Args('input') createDishInput: CreateDishInput,
   ): Promise<CreateDishOutput> {
+    console.log('createdishresolve');
     return this.restaurantService.createDish(owner, createDishInput);
   }
 

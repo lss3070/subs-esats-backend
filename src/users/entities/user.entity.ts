@@ -23,7 +23,6 @@ export enum UserRole {
   Client = 'Client',
   Owner = 'Owner',
   Delivery = 'Delivery',
-  Customer = 'Customer',
 }
 
 registerEnumType(UserRole, { name: 'UserRole' });
@@ -36,6 +35,11 @@ export class User extends CoreEntity {
   @Field((type) => String)
   @IsEmail()
   email: string;
+
+  @Column()
+  @Field((type) => String)
+  @IsString()
+  name: string;
 
   @Column({ select: false })
   @Field((type) => String)

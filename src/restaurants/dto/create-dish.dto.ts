@@ -7,6 +7,7 @@ import { DishDivisionOption } from '../entitities/dish-division';
 export class CreateDishInput extends PickType(Dish, [
   'name',
   'price',
+  'photo',
   'description',
   'options',
 ]) {
