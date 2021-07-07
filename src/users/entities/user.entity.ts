@@ -36,8 +36,8 @@ export class User extends CoreEntity {
   @IsEmail()
   email: string;
 
-  @Column()
-  @Field((type) => String)
+  @Column({ nullable: true })
+  @Field((type) => String, { nullable: true })
   @IsString()
   name: string;
 
