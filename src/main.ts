@@ -3,11 +3,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors({
-    origin: 'https://happy-wozniak-4d6f4e.netlify.app/',
-  });
   await app.listen(process.env.PORT || 4000);
 }
 bootstrap();
